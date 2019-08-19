@@ -24,12 +24,16 @@ from sklearn.model_selection import GridSearchCV
 import warnings
 #Saving the classifier
 import pickle
+'''  - To run ML pipeline that trains classifier and saves
+        `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
+'''
+
 #---------------- Loading data from database ----------------------------------
 def load_data(database_filepath):
     '''Function that loads that data from a SQL database and
     returns the feature X and target variables Y'''
     warnings.simplefilter('ignore')
-    engine = create_engine('sqlite:///DisasterMessages.db')
+    engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql("SELECT * FROM Messages",engine)
     #X = df.iloc[:,1]
     #Y = df.iloc[:,4:]
@@ -37,8 +41,8 @@ def load_data(database_filepath):
     Y = df.drop(['id','message','original','genre'],axis=1)
     category_names = Y.columns
     #Only for testing
-    X = X[:1000]
-    Y = Y[:1000]
+    X = X[:100]
+    Y = Y[:100]
     return X,Y,category_names
 #------------------ Tokenization function to process text data ----------------
 def tokenize(text):
@@ -76,10 +80,10 @@ def build_model():
     # parameters for grid search
     parameters = {
         'vect__ngram_range': ((1, 1), (1, 2)),
-        'vect__max_df': (0.5, 0.75, 1.0),
-        'vect__max_features': (None, 5000, 10000),
+        'vect__max_df': (0.5, 1.0),
+        'vect__max_features': (None, 5000),
         'tfidf__use_idf': (True, False),
-        'clf__estimator__estimator__n_estimators': [10, 50, 100],
+        'clf__estimator__estimator__n_estimators': [10, 50],
         'clf__estimator__estimator__min_samples_split': [2,3]
 
      }
@@ -117,7 +121,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 def save_model(model, model_filepath):
     # save the model to disk
     filename = model_filepath
-    pickle.dump(best_model, open(filename, 'wb'))
+    pickle.dump(model, open(filename, 'wb'))
 
 
 def main():

@@ -2,7 +2,9 @@ import sys
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
-
+'''  - To run ETL pipeline that cleans data and stores in database from the terminal
+        `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db` '''
+        
 def load_data(messages_filepath, categories_filepath):
     #Loading data and creating DataFrames
     messages = pd.read_csv(messages_filepath)
@@ -42,7 +44,7 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    engine = create_engine(database_filename)#'sqlite:///DisasterMessages.db')
+    engine = create_engine('sqlite:///'+ database_filename)
     df.to_sql('Messages', engine, index=False, if_exists='replace')
 
 
