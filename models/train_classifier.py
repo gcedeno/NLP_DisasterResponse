@@ -54,7 +54,7 @@ def tokenize(text):
     #remove stop words // Note: sometimes removing all the stopwords results in just one
     #single word without a concrete meaning
 
-    #tokens = [w for w in tokens if w not in stopwords.words('english')]
+    tokens = [w for w in tokens if w not in stopwords.words('english')]
 
     lemmatizer = WordNetLemmatizer()
 

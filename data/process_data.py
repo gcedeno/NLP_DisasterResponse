@@ -40,8 +40,8 @@ def load_data(messages_filepath, categories_filepath):
 def clean_data(df):
     # drop duplicates
     df.drop_duplicates(inplace=True)
-    #Replacing NaNs with 2
-    df.fillna(2,inplace=True)
+    #Replacing NaNs with 0
+    df.fillna(0,inplace=True)
 
     return df
 
