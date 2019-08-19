@@ -50,8 +50,8 @@ def load_data(database_filepath):
     Y = df.drop(['id','message','original','genre'],axis=1)
     category_names = Y.columns
     #Only for testing
-    X = X[:100]
-    Y = Y[:100]
+    X = X[:1000]
+    Y = Y[:1000]
     return X,Y,category_names
 #------------------ Tokenization function to process text data ----------------
 def tokenize(text):
@@ -100,7 +100,7 @@ def build_model():
 
      }
 
-    model = GridSearchCV(pipeline, param_grid = parameters)
+    model = GridSearchCV(pipeline, param_grid = parameters,n_jobs=4, verbose=2)
 
     return model
 
