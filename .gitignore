@@ -5,3 +5,5 @@
 workspace_utils.py
 classifier.pkl
 data-pipeline.py
+*.ipynb
+*.ipynb_checkpoints
