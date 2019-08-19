@@ -4,7 +4,7 @@ import numpy as np
 from sqlalchemy import create_engine
 '''  - To run ETL pipeline that cleans data and stores in database from the terminal
         `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db` '''
-        
+
 def load_data(messages_filepath, categories_filepath):
     #Loading data and creating DataFrames
     messages = pd.read_csv(messages_filepath)
@@ -26,6 +26,9 @@ def load_data(messages_filepath, categories_filepath):
 
         # convert column from string to numeric
         categories[column] = pd.to_numeric(categories[column])
+
+    #Converting 2-values to 1
+    categories.loc[categories['related'] == 2, 'related'] = 1
     # drop the original categories column from `df`
     df.drop('categories',axis=1,inplace=True)
     # concatenate the original dataframe with the new `categories` dataframe
