@@ -1,3 +1,15 @@
+'''
+Machine Learning Pipeline that reads data from a SQLite database, splits the dataset
+into a training and test set. Then, builds a pipeline model that uses NLTK, as well
+as scikit-learn's Pipeline and GridSearchCV to output a final model that uses the
+`message` column to predict classifications for 36 categories(multioutput classification).
+
+The final trained model is exported as a pickle file.
+
+ - From the terminal: To run ML pipeline that trains a classifier and saves it
+
+        `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
+'''
 # import libraries
 import sys
 import numpy as np
@@ -24,14 +36,11 @@ from sklearn.model_selection import GridSearchCV
 import warnings
 #Saving the classifier
 import pickle
-'''  - To run ML pipeline that trains classifier and saves
-        `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
-'''
 
 #---------------- Loading data from database ----------------------------------
 def load_data(database_filepath):
-    '''Function that loads that data from a SQL database and
-    returns the feature X and target variables Y'''
+    '''Function that loads the data from a SQL database and
+    returns the feature X, target variables Y and category_names'''
     warnings.simplefilter('ignore')
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql("SELECT * FROM Messages",engine)
@@ -46,6 +55,8 @@ def load_data(database_filepath):
     return X,Y,category_names
 #------------------ Tokenization function to process text data ----------------
 def tokenize(text):
+    '''Tokenization function to process text data
+    returns the clean_tokens'''
     warnings.simplefilter('ignore')
     # Text Normalization(remove any characters that are not letters or numbers)
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
@@ -54,7 +65,7 @@ def tokenize(text):
     #remove stop words // Note: sometimes removing all the stopwords results in just one
     #single word without a concrete meaning
 
-    tokens = [w for w in tokens if w not in stopwords.words('english')]
+    #tokens = [w for w in tokens if w not in stopwords.words('english')]
 
     lemmatizer = WordNetLemmatizer()
 
@@ -67,7 +78,8 @@ def tokenize(text):
 
 #----------- Building the Machine Learning Pipeline ---------------------------
 def build_model():
-    '''Function that builds a ML Pipeline with optimization parameters '''
+    '''Function that builds a ML Pipeline with optimization parameters
+    returns the model to be trained '''
     #Ignore warning messages
     warnings.simplefilter('ignore')
 
@@ -94,6 +106,8 @@ def build_model():
 
 #--------------- Multiclassification report -------------------------------------
 def multiclass_report(y_test, y_pred,category_names):
+    '''Creates a multioutput classification report for the 36 categories.
+    The f1 score, precision and recall for the test set is outputted for each category.'''
     warnings.simplefilter('ignore')
     #iterating through the columns and calling sklearn's `classification_report` on each.
     for c, column in enumerate(category_names):
@@ -111,6 +125,8 @@ def multiclass_report(y_test, y_pred,category_names):
 
 # ------------- Evaluating Model Performance -----------------------------------
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''Predicts on test data and then runs a multiclass_report to analyze
+    the classifier performance making predictions on the 36 categories '''
     # predict on test data// GridSearchCV calls predict on the estimator with the best found parameters
     y_pred = model.predict(X_test)
     # display results
@@ -119,6 +135,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    '''Saves the model as a pickle file to the specified filepath as input argument '''
     # save the model to disk
     filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
