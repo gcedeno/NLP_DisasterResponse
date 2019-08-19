@@ -1,3 +1,5 @@
 *.csv
 *.pdf
 *.db
+*.gz
+workspace_utils.py
