@@ -2,10 +2,26 @@ import sys
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
-'''  - To run ETL pipeline that cleans data and stores in database from the terminal
-        `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db` '''
+'''
+This program performs the Extract, Transform and Load process (ETL). The ETL
+pipeline reads the dataset with the filepaths given as input arguments from the
+command line, cleans the data, and the stores it in a SQLite database for later use.
+
+ - To run ETL pipeline that cleans data and stores in database from the terminal
+
+`python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db`
+
+'''
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    Function that loads the datasets, then creates a merge dataset, splits categories
+    into separate category columns and converts category values to binary(just 0 or 1),
+    and as a final step, concatenates the original dataframe with the new `categories`
+    datafame.
+
+    Returns: df (Final DataFrame after all convertions)
+    '''
     #Loading data and creating DataFrames
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
@@ -38,6 +54,10 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''
+    Function that takes the DataFrame, removes duplicates and fills the NaNs with 0s
+    Returns a clean df without duplicates nor null values
+    '''
     # drop duplicates
     df.drop_duplicates(inplace=True)
     #Replacing NaNs with 0
@@ -47,6 +67,10 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''
+    Function that saves the clean dataset into a sqlite databaee.
+    The database_filename is given as input argument 
+    '''
     engine = create_engine('sqlite:///'+ database_filename)
     df.to_sql('Messages', engine, index=False, if_exists='replace')
 
