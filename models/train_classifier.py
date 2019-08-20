@@ -44,14 +44,13 @@ def load_data(database_filepath):
     warnings.simplefilter('ignore')
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql("SELECT * FROM Messages",engine)
-    #X = df.iloc[:,1]
-    #Y = df.iloc[:,4:]
+
     X = df['message']
     Y = df.drop(['id','message','original','genre'],axis=1)
     category_names = Y.columns
     #Only for testing
-    X = X[:1000]
-    Y = Y[:1000]
+    #X = X[:1000]
+    #Y = Y[:1000]
     return X,Y,category_names
 #------------------ Tokenization function to process text data ----------------
 def tokenize(text):
@@ -64,7 +63,6 @@ def tokenize(text):
     tokens = word_tokenize(text)
     #remove stop words // Note: sometimes removing all the stopwords results in just one
     #single word without a concrete meaning
-
     #tokens = [w for w in tokens if w not in stopwords.words('english')]
 
     lemmatizer = WordNetLemmatizer()
