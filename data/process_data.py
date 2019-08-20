@@ -4,8 +4,8 @@ import numpy as np
 from sqlalchemy import create_engine
 '''
 This program performs the Extract, Transform and Load process (ETL). The ETL
-pipeline reads the dataset with the filepaths given as input arguments from the
-command line, cleans the data, and the stores it in a SQLite database for later use.
+pipeline reads the dataset from csv files with the filepaths given as input arguments
+from the command line, cleans the data, and the stores it in a SQLite database for later use.
 
  - To run ETL pipeline that cleans data and stores in database from the terminal
 
@@ -69,7 +69,7 @@ def clean_data(df):
 def save_data(df, database_filename):
     '''
     Function that saves the clean dataset into a sqlite databaee.
-    The database_filename is given as input argument 
+    The database_filename is given as input argument
     '''
     engine = create_engine('sqlite:///'+ database_filename)
     df.to_sql('Messages', engine, index=False, if_exists='replace')
