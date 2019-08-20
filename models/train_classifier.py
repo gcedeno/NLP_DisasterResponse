@@ -49,8 +49,8 @@ def load_data(database_filepath):
     Y = df.drop(['id','message','original','genre'],axis=1)
     category_names = Y.columns
     #Only for testing
-    #X = X[:1000]
-    #Y = Y[:1000]
+    #X = X[:5000]
+    #Y = Y[:5000]
     return X,Y,category_names
 #------------------ Tokenization function to process text data ----------------
 def tokenize(text):

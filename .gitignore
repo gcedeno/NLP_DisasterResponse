@@ -7,5 +7,3 @@ workspace_utils.py
 data-pipeline.py
 *.ipynb
 *.ipynb_checkpoints
-models/classifier.pkl
-*.pkl
